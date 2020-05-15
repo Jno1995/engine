@@ -933,6 +933,17 @@ export function packCustomObjData (type: string, data: IClassObjectData|OtherObj
     ];
 }
 
+export function packCustomObjData2 (type: string, data: IClassObjectData|OtherObjectData): IFileData {
+    return [
+        SUPPORT_LOWEST_FORMAT_VERSION, EMPTY_PLACEHOLDER, EMPTY_PLACEHOLDER,
+        [type],
+        EMPTY_PLACEHOLDER,
+        [data],
+        [0],
+        EMPTY_PLACEHOLDER, [], [], []
+    ];
+}
+
 if (CC_EDITOR || CC_TEST) {
     cc._deserializeCompiled = deserialize;
     deserialize.macros = {

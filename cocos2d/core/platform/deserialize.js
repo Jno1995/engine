@@ -28,6 +28,7 @@ import deserialize from './deserialize-compiled';
 
 if (CC_BUILD) {
     cc.deserialize = deserialize;
+    cc._deserializeEditor = require('./deserialize-editor');
 }
 else {
     cc.deserialize = require('./deserialize-editor');

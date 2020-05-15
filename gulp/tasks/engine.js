@@ -40,7 +40,7 @@ const HandleErrors = require('../util/handleErrors');
 const Optimizejs = require('gulp-optimize-js');
 
 let buildSkipModules = [
-    '../../cocos2d/core/platform/deserialize-editor.js',
+    // '../../cocos2d/core/platform/deserialize-editor.js',
 ];
 
 let physicsSkipModules = [
