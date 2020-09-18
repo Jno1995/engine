@@ -137,7 +137,7 @@ let inputManager = {
      */
     handleTouchesBegin (touches) {
         let selTouch, index, curTouch, touchID,
-            handleTouches = [], locTouchIntDict = this._touchesIntegerDict,
+            handleTouches = [], locTouchIntDict = {},
             now = sys.now();
         for (let i = 0, len = touches.length; i < len; i ++) {
             selTouch = touches[i];
@@ -367,10 +367,10 @@ let inputManager = {
         let touchArr = [], locView = this._glView;
         let touch_event, touch, preLocation;
         let locPreTouch = this._preTouchPoint;
-
-        let length = event.changedTouches.length;
+        let eventTouchs = event.type === "touchstart" ? event.touches : event.changedTouches;
+        let length = eventTouchs.length;
         for (let i = 0; i < length; i++) {
-            touch_event = event.changedTouches[i];
+            touch_event = eventTouchs[i];
             if (touch_event) {
                 let location;
                 if (sys.BROWSER_TYPE_FIREFOX === sys.browserType)
