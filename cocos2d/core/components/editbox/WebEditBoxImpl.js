@@ -50,9 +50,10 @@ if (cc.sys.OS_ANDROID === cc.sys.os &&
 }
 
 // https://segmentfault.com/q/1010000002914610
-const DELAY_TIME = 800;
+cc.SCROLL_WINDOW_DELAY = {time: 800};
+var DELAY_TIME = cc.SCROLL_WINDOW_DELAY.time;
 const SCROLLY = 100;
-const LEFT_PADDING = 2;
+const LEFT_PADDING = 4;
 
 // private static property
 let _domCount = 0;
@@ -136,6 +137,13 @@ Object.assign(WebEditBoxImpl.prototype, {
 
         _fullscreen = cc.view.isAutoFullScreenEnabled();
         _autoResize = cc.view._resizeWithBrowserSize;
+
+        this._updateMaxLength();
+        this._updateInputType();
+        this._updateStyleSheet();
+
+        this._elem.style.display = '';
+        this._delegate._hideLabels();
     },
 
     clear () {
@@ -163,6 +171,11 @@ Object.assign(WebEditBoxImpl.prototype, {
         let elem = this._elem;
         elem.style.width = width + 'px';
         elem.style.height = height + 'px';
+        var regex = /px/gi;
+        var delayWidth = Number(elem.style.fontSize.replace(regex, ''));
+        var backgroundSpr = this._delegate.node.getChildByName("BACKGROUND_SPRITE");
+        backgroundSpr.getComponent(cc.Widget).enabled = false;
+        backgroundSpr.width = elem.clientWidth + delayWidth / 2;
     },
 
     beginEditing () {
@@ -229,7 +242,7 @@ Object.assign(WebEditBoxImpl.prototype, {
     _hideDom () {
         let elem = this._elem;
 
-        elem.style.display = 'none';
+        // elem.style.display = 'none';
         this._delegate._showLabels();
         
         if (cc.sys.isMobile) {
@@ -656,10 +669,8 @@ Object.assign(WebEditBoxImpl.prototype, {
         // Both need to adjust window scroll.
         cbs.onClick = function (e) {
             // In case operation sequence: click input, hide keyboard, then click again.
-            if (impl._editing) {
-                if (cc.sys.isMobile) {
-                    impl._adjustWindowScroll();
-                }
+            if (cc.sys.isMobile) {
+                impl._showDomOnMobile();
             }
         };
         

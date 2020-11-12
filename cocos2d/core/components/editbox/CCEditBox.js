@@ -540,6 +540,7 @@ let EditBox = cc.Class({
             }
             node.parent = this.node;
             this.textLabel = textLabel;
+            node.active = false;
         }
 
         // update
@@ -662,12 +663,12 @@ let EditBox = cc.Class({
     _updateLabels () {
         if (this._isLabelVisible) {
             let content = this._string;
-            if (this.textLabel) {
-                this.textLabel.node.active = (content !== '');
-            }
-            if (this.placeholderLabel) {
-                this.placeholderLabel.node.active = (content === '');
-            }
+            // if (this.textLabel) {
+            //     this.textLabel.node.active = (content !== '');
+            // }
+            // if (this.placeholderLabel) {
+            //     this.placeholderLabel.node.active = (content === '');
+            // }
         }
     },
 
@@ -678,13 +679,15 @@ let EditBox = cc.Class({
             return;
         }
 
-        let displayText = text;
-        if (displayText) {
-            displayText = this._updateLabelStringStyle(displayText);
-        }
+        // let displayText = text;
+        // if (displayText) {
+        //     displayText = this._updateLabelStringStyle(displayText);
+        // }
 
-        textLabel.string = displayText;
+        // textLabel.string = displayText;
 
+        this._impl._elem.value = text;
+        
         this._updateLabels();
     },
 
