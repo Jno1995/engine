@@ -134,7 +134,7 @@ export class TweenAction extends ActionInterval {
             // - it was undefined / null
             if (!props.hasOwnProperty(name)) continue;
             let value = props[name];
-            if (!value || typeof value === 'function') continue;
+            if (value === null || typeof value === "undefined" || typeof value === 'function') continue;
             // property may have custom easing or progress function
             let easing, progress;
             if (value.value !== undefined && (value.easing || value.progress)) {
