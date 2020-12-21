@@ -35,7 +35,7 @@ import { legacyCC, VERSION } from '../core/global-exports';
 
 /** adapter */
 function TweenEasinAdapter (easingName: string) {
-    let initialChar = easingName.charAt(0);
+    const initialChar = easingName.charAt(0);
     if (/[A-Z]/.test(initialChar)) {
         easingName = easingName.replace(initialChar, initialChar.toLowerCase());
         const arr = easingName.split('-');
@@ -47,22 +47,22 @@ function TweenEasinAdapter (easingName: string) {
                 const str1 = arr[1];
                 switch (str0) {
                     case 'quadratic':
-                        easingName = 'quad' + str1;
+                        easingName = `quad${str1}`;
                         break;
                     case 'quartic':
-                        easingName = 'quart' + str1;
+                        easingName = `quart${str1}`;
                         break;
                     case 'quintic':
-                        easingName = 'quint' + str1;
+                        easingName = `quint${str1}`;
                         break;
                     case 'sinusoidal':
-                        easingName = 'sine' + str1;
+                        easingName = `sine${str1}`;
                         break;
                     case 'exponential':
-                        easingName = 'expo' + str1;
+                        easingName = `expo${str1}`;
                         break;
                     case 'circular':
-                        easingName = 'circ' + str1;
+                        easingName = `circ${str1}`;
                         break;
                     default:
                         easingName = str0 + str1;
@@ -78,20 +78,20 @@ function TweenEasinAdapter (easingName: string) {
 function TweenOptionChecker (opts: ITweenOption) {
     const header = ' [Tween:] ';
     const message = ` option is not support in v + ${VERSION}`;
-    if (opts['delay']) {
-        warn(header + 'delay' + message);
+    if (opts.delay) {
+        warn(`${header}delay${message}`);
     }
-    if (opts['repeat']) {
-        warn(header + 'repeat' + message);
+    if (opts.repeat) {
+        warn(`${header}repeat${message}`);
     }
-    if (opts['repeatDelay']) {
-        warn(header + 'repeatDelay' + message);
+    if (opts.repeatDelay) {
+        warn(`${header}repeatDelay${message}`);
     }
-    if (opts['interpolation']) {
-        warn(header + 'interpolation' + message);
+    if (opts.interpolation) {
+        warn(`${header}interpolation${message}`);
     }
-    if (opts['onStop']) {
-        warn(header + 'onStop' + message);
+    if (opts.onStop) {
+        warn(`${header}onStop${message}`);
     }
 }
 
