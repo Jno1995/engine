@@ -214,7 +214,7 @@ export default class BmfontAssembler extends Assembler2D {
                 continue;
             }
 
-            let tokenLen = nextTokenFunc(_string, index, textLen);
+            let tokenLen = nextTokenFunc(_string, index, textLen, comp);
             let tokenHighestY = highestY;
             let tokenLowestY = lowestY;
             let tokenRight = letterRight;
@@ -335,7 +335,7 @@ export default class BmfontAssembler extends Assembler2D {
         return _overflow === Overflow.SHRINK ? _bmfontScale : 1;
     }
 
-    _getFirstWordLen (text, startIndex, textLen) {
+    _getFirstWordLen (text, startIndex, textLen, comp) {
         let character = text.charAt(startIndex);
         if (textUtils.isUnicodeCJK(character)
             || character === "\n"
@@ -344,7 +344,7 @@ export default class BmfontAssembler extends Assembler2D {
         }
 
         let len = 1;
-        let letterDef = shareLabelInfo.fontAtlas.getLetterDefinitionForChar(character, shareLabelInfo);
+        let letterDef = shareLabelInfo.fontAtlas.getLetterDefinitionForChar(character, shareLabelInfo, comp);
         if (!letterDef) {
             return len;
         }
@@ -353,7 +353,7 @@ export default class BmfontAssembler extends Assembler2D {
         for (let index = startIndex + 1; index < textLen; ++index) {
             character = text.charAt(index);
 
-            letterDef = shareLabelInfo.fontAtlas.getLetterDefinitionForChar(character, shareLabelInfo);
+            letterDef = shareLabelInfo.fontAtlas.getLetterDefinitionForChar(character, shareLabelInfo, comp);
             if (!letterDef) {
                 break;
             }
