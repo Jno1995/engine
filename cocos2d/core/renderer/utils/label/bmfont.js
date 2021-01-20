@@ -87,7 +87,7 @@ export default class BmfontAssembler extends Assembler2D {
         this._updateFontFamily(comp);
         this._updateProperties(comp);
         this._updateLabelInfo(comp);
-        this._updateContent();
+        this._updateContent(comp);
         this.updateWorldVerts(comp);
         
         _comp._actualFontSize = _fontSize;
@@ -157,10 +157,10 @@ export default class BmfontAssembler extends Assembler2D {
         shareLabelInfo.margin = 0;
     }
 
-    _updateContent () {
+    _updateContent (comp) {
         this._updateFontScale();
         this._computeHorizontalKerningForText();
-        this._alignText();
+        this._alignText(comp);
     }
 
     _computeHorizontalKerningForText () {
@@ -187,7 +187,7 @@ export default class BmfontAssembler extends Assembler2D {
         }
     }
 
-    _multilineTextWrap (nextTokenFunc) {
+    _multilineTextWrap (nextTokenFunc, comp) {
         let textLen = _string.length;
 
         let lineIndex = 0;
@@ -228,7 +228,7 @@ export default class BmfontAssembler extends Assembler2D {
                     this._recordPlaceholderInfo(letterIndex, character);
                     continue;
                 }
-                letterDef = shareLabelInfo.fontAtlas.getLetterDefinitionForChar(character, shareLabelInfo);
+                letterDef = shareLabelInfo.fontAtlas.getLetterDefinitionForChar(character, shareLabelInfo, comp);
                 if (!letterDef) {
                     this._recordPlaceholderInfo(letterIndex, character);
                     let atlasName = "";
@@ -376,8 +376,8 @@ export default class BmfontAssembler extends Assembler2D {
         return len;
     }
 
-    _multilineTextWrapByWord () {
-        return this._multilineTextWrap(this._getFirstWordLen);
+    _multilineTextWrapByWord (comp) {
+        return this._multilineTextWrap(this._getFirstWordLen, comp);
     }
 
     _multilineTextWrapByChar () {
@@ -411,12 +411,12 @@ export default class BmfontAssembler extends Assembler2D {
         _lettersInfo[letterIndex].y = letterPosition.y;
     }
 
-    _alignText () {
+    _alignText (comp) {
         _textDesiredHeight = 0;
         _linesWidth.length = 0;
 
         if (!_lineBreakWithoutSpaces) {
-            this._multilineTextWrapByWord();
+            this._multilineTextWrapByWord(comp);
         } else {
             this._multilineTextWrapByChar();
         }

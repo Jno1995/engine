@@ -60,9 +60,9 @@ function LetterTexture(char, labelInfo) {
 LetterTexture.prototype = {
     constructor: LetterTexture,
 
-    updateRenderData () {
+    updateRenderData (comp) {
         this._updateProperties();
-        this._updateTexture();
+        this._updateTexture(comp);
     },
     _updateProperties () {
         this._texture = new cc.Texture2D();
@@ -86,11 +86,15 @@ LetterTexture.prototype = {
 
         this._texture.initWithElement(this._canvas);
     },
-    _updateTexture () {
+    _updateTexture (comp) {
         let context = this._context;
         let labelInfo = this._labelInfo,
             width = this._canvas.width,
             height = this._canvas.height;
+
+        const _srcBlendFactor = comp.srcBlendFactor;
+        const _dstBlendFactor = comp.dstBlendFactor;
+        const _cacheMode = comp.cacheMode;
 
         const fontSize = this._labelInfo.fontSize;
         let startX = width / 2;
@@ -113,8 +117,13 @@ LetterTexture.prototype = {
             context.lineWidth = labelInfo.margin * 2;
             context.strokeText(this._char, startX, startY);
         }
+        if (_cacheMode === cc.Label.CacheMode.CHAR && _srcBlendFactor === cc.macro.ONE && _dstBlendFactor === cc.macro.ONE_MINUS_SRC_ALPHA) {
+            context.strokeStyle = "rgba(" + color.r / 255 + ", " + color.r / 255 + ", " + color.r / 255 + ", " + 1 + ")";
+            context.lineWidth = 0.5
+            context.strokeText(this._char, startX, startY);
+        }
+        
         context.fillText(this._char, startX, startY);
-
         this._texture.handleLoadedTexture();
     },
 
@@ -232,12 +241,12 @@ cc.js.mixin(LetterAtlas.prototype, {
         return this._fontDefDictionary.getTexture();
     },
 
-    getLetterDefinitionForChar: function(char, labelInfo) {
+    getLetterDefinitionForChar: function(char, labelInfo, comp) {
         let hash = char.charCodeAt(0) + labelInfo.hash;
         let letter = this._fontDefDictionary._letterDefinitions[hash];
         if (!letter) {
             let temp = new LetterTexture(char, labelInfo);
-            temp.updateRenderData();
+            temp.updateRenderData(comp);
             letter = this.insertLetterTexture(temp);
             temp.destroy();
         }
@@ -246,15 +255,18 @@ cc.js.mixin(LetterAtlas.prototype, {
     }
 });
 
-function computeHash (labelInfo) {
+function computeHash (labelInfo, comp) {
     let hashData = '';
     let color = labelInfo.color.toHEX();
     let out = '';
     if (labelInfo.isOutlined && labelInfo.margin > 0) {
         out = out + labelInfo.margin + labelInfo.out.toHEX();
     }
-    
-    return hashData + labelInfo.fontSize + labelInfo.fontFamily + color + out;
+    const _srcBlendFactor = comp.srcBlendFactor;
+    const _dstBlendFactor = comp.dstBlendFactor;
+    const _cacheMode = comp.cacheMode;
+
+    return hashData + labelInfo.fontSize + labelInfo.fontFamily + color + out + _srcBlendFactor + _dstBlendFactor + _cacheMode;
 }
 
 let _shareAtlas = null;
@@ -294,7 +306,7 @@ export default class LetterFontAssembler extends WebglBmfontAssembler {
     _updateLabelInfo (comp) {
         shareLabelInfo.fontDesc = this._getFontDesc();
         shareLabelInfo.color = comp.node.color;
-        shareLabelInfo.hash = computeHash(shareLabelInfo);
+        shareLabelInfo.hash = computeHash(shareLabelInfo, comp);
     }
 
     _getFontDesc () {

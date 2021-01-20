@@ -215,6 +215,7 @@ let Label = cc.Class({
 
                 if (this.string !== oldValue) {
                     this.setVertsDirty();
+                    this._applyFontTexture();
                 }
 
                 this._checkStringEmpty();
